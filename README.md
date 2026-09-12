@@ -65,7 +65,8 @@ are converted to bytes internally by dividing by 8.
 ### Durations
 
 Anything Go's `time.ParseDuration` accepts: `90s`, `3m20s`, `1h30m`, and so
-on.
+on, plus `d` and `w` for days and weeks, since backup windows and retention
+periods are usually thought about that way: `2d`, `1w`, `1w3d12h`.
 
 ## Building
 

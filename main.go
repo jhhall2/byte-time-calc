@@ -25,7 +25,7 @@ type result struct {
 func main() {
 	sizeFlag := flag.String("size", "", "data size, e.g. 4.7GB, 650MiB")
 	rateFlag := flag.String("rate", "", "transfer rate, e.g. 25MB/s, 100Mbps")
-	durationFlag := flag.String("duration", "", "duration, e.g. 90s, 1h30m")
+	durationFlag := flag.String("duration", "", "duration, e.g. 90s, 1h30m, 2d, 1w")
 	jsonOut := flag.Bool("json", false, "print the result as JSON instead of text")
 	flag.Usage = usage
 	flag.Parse()
@@ -86,7 +86,7 @@ func solve(sizeStr, rateStr, durationStr string) (*result, error) {
 		}
 	}
 	if haveDuration {
-		dur, err = time.ParseDuration(durationStr)
+		dur, err = ParseDuration(durationStr)
 		if err != nil {
 			return nil, fmt.Errorf("duration: %w", err)
 		}
