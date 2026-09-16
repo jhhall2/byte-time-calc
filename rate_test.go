@@ -47,17 +47,19 @@ func TestParseRateErrors(t *testing.T) {
 
 func TestFormatRate(t *testing.T) {
 	cases := []struct {
-		in   float64
-		want string
+		in        float64
+		precision int
+		want      string
 	}{
-		{0, "0 B/s"},
-		{25000000, "25.00 MB/s"},
-		{12500000, "12.50 MB/s"},
+		{0, 2, "0 B/s"},
+		{25000000, 2, "25.00 MB/s"},
+		{12500000, 2, "12.50 MB/s"},
+		{12500000, 0, "12 MB/s"},
 	}
 	for _, c := range cases {
-		got := FormatRate(c.in)
+		got := FormatRate(c.in, c.precision)
 		if got != c.want {
-			t.Errorf("FormatRate(%v) = %q, want %q", c.in, got, c.want)
+			t.Errorf("FormatRate(%v, %d) = %q, want %q", c.in, c.precision, got, c.want)
 		}
 	}
 }

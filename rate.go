@@ -64,6 +64,6 @@ func ParseRate(s string) (float64, error) {
 }
 
 // FormatRate renders bytes/sec using the same scale as FormatSize.
-func FormatRate(bytesPerSec float64) string {
-	return FormatSize(int64(bytesPerSec)) + "/s"
+func FormatRate(bytesPerSec float64, precision int) string {
+	return FormatSize(int64(bytesPerSec), precision) + "/s"
 }

@@ -35,6 +35,14 @@ $ bytetime --rate 100Mbps --duration 1h
 45.00 GB at 12.50 MB/s takes 1h0m0s
 ```
 
+Control how many decimal places size and rate are shown with `--precision`
+(default 2):
+
+```
+$ bytetime --size 4.7GB --rate 25MB/s --precision 0
+5 GB at 25 MB/s takes 3m8s
+```
+
 Add `--json` to any of the above for a machine-readable result instead:
 
 ```

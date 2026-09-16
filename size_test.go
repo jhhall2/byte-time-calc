@@ -53,19 +53,22 @@ func TestParseSizeErrors(t *testing.T) {
 
 func TestFormatSize(t *testing.T) {
 	cases := []struct {
-		in   int64
-		want string
+		in        int64
+		precision int
+		want      string
 	}{
-		{0, "0 B"},
-		{999, "999 B"},
-		{1000, "1.00 KB"},
-		{4700000000, "4.70 GB"},
-		{-1000, "-1.00 KB"},
+		{0, 2, "0 B"},
+		{999, 2, "999 B"},
+		{1000, 2, "1.00 KB"},
+		{4700000000, 2, "4.70 GB"},
+		{-1000, 2, "-1.00 KB"},
+		{4700000000, 0, "5 GB"},
+		{4700000000, 4, "4.7000 GB"},
 	}
 	for _, c := range cases {
-		got := FormatSize(c.in)
+		got := FormatSize(c.in, c.precision)
 		if got != c.want {
-			t.Errorf("FormatSize(%d) = %q, want %q", c.in, got, c.want)
+			t.Errorf("FormatSize(%d, %d) = %q, want %q", c.in, c.precision, got, c.want)
 		}
 	}
 }

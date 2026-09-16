@@ -68,10 +68,10 @@ func unitMultiplier(unit string) (float64, bool) {
 }
 
 // FormatSize renders a byte count the way "du -h" style tools do: decimal
-// steps of 1000, two decimal places once we're past raw bytes.
-func FormatSize(n int64) string {
+// steps of 1000, precision decimal places once we're past raw bytes.
+func FormatSize(n int64, precision int) string {
 	if n < 0 {
-		return "-" + FormatSize(-n)
+		return "-" + FormatSize(-n, precision)
 	}
 	if n < 1000 {
 		return fmt.Sprintf("%d B", n)
@@ -84,5 +84,5 @@ func FormatSize(n int64) string {
 		f /= 1000
 		i++
 	}
-	return fmt.Sprintf("%.2f %s", f, units[i])
+	return fmt.Sprintf("%.*f %s", precision, f, units[i])
 }

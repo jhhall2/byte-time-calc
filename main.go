@@ -27,6 +27,7 @@ func main() {
 	rateFlag := flag.String("rate", "", "transfer rate, e.g. 25MB/s, 100Mbps")
 	durationFlag := flag.String("duration", "", "duration, e.g. 90s, 1h30m, 2d, 1w")
 	jsonOut := flag.Bool("json", false, "print the result as JSON instead of text")
+	precisionFlag := flag.Int("precision", 2, "decimal places to show for size and rate")
 	flag.Usage = usage
 	flag.Parse()
 
@@ -41,8 +42,12 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
+	if *precisionFlag < 0 {
+		fmt.Fprintln(os.Stderr, "bytetime: --precision cannot be negative")
+		os.Exit(2)
+	}
 
-	res, err := solve(*sizeFlag, *rateFlag, *durationFlag)
+	res, err := solve(*sizeFlag, *rateFlag, *durationFlag, *precisionFlag)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "bytetime:", err)
 		os.Exit(1)
@@ -61,7 +66,7 @@ func main() {
 	fmt.Printf("%s at %s takes %s\n", res.SizeHuman, res.RateHuman, res.DurationHuman)
 }
 
-func solve(sizeStr, rateStr, durationStr string) (*result, error) {
+func solve(sizeStr, rateStr, durationStr string, precision int) (*result, error) {
 	var (
 		sizeBytes int64
 		rateBps   float64
@@ -109,9 +114,9 @@ func solve(sizeStr, rateStr, durationStr string) (*result, error) {
 
 	return &result{
 		SizeBytes:       sizeBytes,
-		SizeHuman:       FormatSize(sizeBytes),
+		SizeHuman:       FormatSize(sizeBytes, precision),
 		RateBytesPerSec: rateBps,
-		RateHuman:       FormatRate(rateBps),
+		RateHuman:       FormatRate(rateBps, precision),
 		DurationSeconds: dur.Seconds(),
 		DurationHuman:   dur.String(),
 	}, nil
@@ -123,6 +128,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  bytetime --size 4.7GB --rate 25MB/s")
 	fmt.Fprintln(os.Stderr, "  bytetime --size 4.7GB --duration 3m20s")
 	fmt.Fprintln(os.Stderr, "  bytetime --rate 100Mbps --duration 1h")
+	fmt.Fprintln(os.Stderr, "  bytetime --size 4.7GB --rate 25MB/s --precision 0")
 	fmt.Fprintln(os.Stderr, "\nFlags:")
 	flag.PrintDefaults()
 }
